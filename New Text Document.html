@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Interactiva</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        #botonNo {
+            font-size: 16px;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+        .boton-extra {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            background-color: gold;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .boton-extra:hover {
+            background-color: darkorange;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1 id="texto">Holaaaaaaa presiona el botón porfas.</h1>
+    <button id="boton" onclick="cambiarTexto()">Presionar</button>
+    <div id="botonesExtra"></div>
+    <canvas id="grafica" width="400" height="200" style="display:none;"></canvas>
+    <div id="botonesGraficas" style="display:none;">
+        <button class="boton-extra" onclick="quitarGraficas()">:0</button>
+    </div>
+    <div id="botonTeGusto" style="display:none;">
+        <button class="boton-extra" onclick="mensajeFinal()">¿Te gustó?</button>
+    </div>
+
+    <script>
+        let estado = 0;
+        let intentosNo = 0; // Contador de intentos para el botón "No"
+
+        function cambiarTexto() {
+            const texto = document.getElementById('texto');
+            const boton = document.getElementById('boton');
+            const botonesExtra = document.getElementById('botonesExtra');
+
+            if (estado === 0) {
+                texto.innerText = 'Esto fue bastante difícil :,c de hacer gracias por estar aquí presiona de nuevo.';
+                estado++;
+            } else if (estado === 1) {
+                texto.innerText = 'Tomé un poco de mi tiempo para hacer esto. Recuerdo que dijiste que te costaba mantener ahora un poco la atención, así que para darte este gran mensaje quiero asegurarme de captar tu atención.';
+                estado++;
+            } else if (estado === 2) {
+                texto.innerText = 'Elige un botón para responder, ¿Quieres saber qué quería decirte? (intenta decir que no primero ;p).';
+                boton.style.display = 'none';
+                botonesExtra.innerHTML = '<button id="botonSi" onclick="elegirSi()">Sí</button> <button id="botonNo" onclick="elegirNo()">No</button>';
+                estado++;
+            }
+        }
+
+        function elegirNo() {
+            const botonNo = document.getElementById('botonNo');
+            const texto = document.getElementById('texto');
+
+            intentosNo++;
+            if (intentosNo < 3) {
+                // Reducir tamaño del botón
+                let fontSize = parseInt(window.getComputedStyle(botonNo).fontSize);
+                botonNo.style.fontSize = (fontSize - 2) + 'px';
+                texto.innerText = `¿Segura chaparrita? Intento ${intentosNo} de 3.`;
+            } else {
+                // Mostrar mensaje final y ocultar botón "No"
+                texto.innerText = 'Sabía que ibas a decir que sí de todos modos :p';
+                botonNo.style.display = 'none';
+            }
+        }
+
+        function elegirSi() {
+            const texto = document.getElementById('texto');
+            const botonesExtra = document.getElementById('botonesExtra');
+            const grafica = document.getElementById('grafica');
+            const botonesGraficas = document.getElementById('botonesGraficas');
+
+            texto.innerText = 'Solo quería recordarte que eres maravillosa, increíble, divertida, inteligente, pero yo sé que ya sabes eso. Pero mira las estadísticas.';
+            botonesExtra.innerHTML = '';
+            grafica.style.display = 'block';
+            botonesGraficas.style.display = 'block';
+            dibujarGrafica();
+        }
+
+        function dibujarGrafica() {
+            const ctx = document.getElementById('grafica').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['L@s demás', 'Sarah'],
+                    datasets: [{
+                        label: 'Nivel de Genialidad',
+                        data: [0.5, 200],
+                        backgroundColor: ['blue', 'gold']
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function quitarGraficas() {
+            const texto = document.getElementById('texto');
+            const grafica = document.getElementById('grafica');
+            const botonesGraficas = document.getElementById('botonesGraficas');
+            const botonTeGusto = document.getElementById('botonTeGusto');
+
+            texto.innerText = 'Los datos no mienten, eres súper increíble. You are the boss girl 😎';
+            grafica.style.display = 'none';
+            botonesGraficas.style.display = 'none';
+            botonTeGusto.style.display = 'block'; // Mostrar el botón "¿Te gustó?"
+        }
+
+        function mensajeFinal() {
+            const texto = document.getElementById('texto');
+            texto.innerText = 'Responde en Whats :P Espero haber podido sacarte aunque sea una sonrisa. Eres muy especial para mí, espero esto, aunque sea pequeño, sea importante tanto como las listas de música 😊';
+        }
+    </script>
+</body>
+</html>
