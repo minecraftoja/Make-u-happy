@@ -46,14 +46,27 @@
     </div>
 
     <script>
+        const WEBHOOK_URL = "https://trigger.macrodroid.com/909beeb7-a895-45d2-8422-4f293251061f/web";
         let estado = 0;
-        let intentosNo = 0; // Contador de intentos para el botón "No"
+        let intentosNo = 0;
+
+        function enviarWebhook(textoBoton) {
+            fetch(WEBHOOK_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    mensaje: textoBoton
+                })
+            }).catch(() => {});
+        }
 
         function cambiarTexto() {
             const texto = document.getElementById('texto');
             const boton = document.getElementById('boton');
             const botonesExtra = document.getElementById('botonesExtra');
-
+            enviarWebhook("Presionar");
             if (estado === 0) {
                 texto.innerText = 'Esto fue bastante difícil :,c de hacer gracias por estar aquí presiona de nuevo.';
                 estado++;
@@ -69,28 +82,26 @@
         }
 
         function elegirNo() {
+            enviarWebhook("No");
             const botonNo = document.getElementById('botonNo');
             const texto = document.getElementById('texto');
-
             intentosNo++;
             if (intentosNo < 3) {
-                // Reducir tamaño del botón
                 let fontSize = parseInt(window.getComputedStyle(botonNo).fontSize);
                 botonNo.style.fontSize = (fontSize - 2) + 'px';
                 texto.innerText = `¿Segura chaparrita? Intento ${intentosNo} de 3.`;
             } else {
-                // Mostrar mensaje final y ocultar botón "No"
                 texto.innerText = 'Sabía que ibas a decir que sí de todos modos :p';
                 botonNo.style.display = 'none';
             }
         }
 
         function elegirSi() {
+            enviarWebhook("Sí");
             const texto = document.getElementById('texto');
             const botonesExtra = document.getElementById('botonesExtra');
             const grafica = document.getElementById('grafica');
             const botonesGraficas = document.getElementById('botonesGraficas');
-
             texto.innerText = 'Solo quería recordarte que eres maravillosa, increíble, divertida, inteligente, pero yo sé que ya sabes eso. Pero mira las estadísticas.';
             botonesExtra.innerHTML = '';
             grafica.style.display = 'block';
@@ -127,18 +138,19 @@
         }
 
         function quitarGraficas() {
+            enviarWebhook(":0");
             const texto = document.getElementById('texto');
             const grafica = document.getElementById('grafica');
             const botonesGraficas = document.getElementById('botonesGraficas');
             const botonTeGusto = document.getElementById('botonTeGusto');
-
             texto.innerText = 'Los datos no mienten, eres súper increíble. You are the boss girl 😎';
             grafica.style.display = 'none';
             botonesGraficas.style.display = 'none';
-            botonTeGusto.style.display = 'block'; // Mostrar el botón "¿Te gustó?"
+            botonTeGusto.style.display = 'block';
         }
 
         function mensajeFinal() {
+            enviarWebhook("¿Te gustó?");
             const texto = document.getElementById('texto');
             texto.innerText = 'Responde en Whats :P Espero haber podido sacarte aunque sea una sonrisa. Eres muy especial para mí, espero esto, aunque sea pequeño, sea importante tanto como las listas de música 😊';
         }
